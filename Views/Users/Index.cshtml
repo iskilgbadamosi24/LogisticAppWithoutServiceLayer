@@ -1,0 +1,114 @@
+﻿@model List<UserViewModel>
+@{
+    ViewData["title"] = "Users";
+    var index = 1;
+}
+
+<h1>Users</h1>
+
+<div class="container my-2">
+    <div class="row justify-content-between">
+        <div>
+            <h6 class="mt-2"><i class="fa-solid fa-house"></i> > <a asp-action="Index" class="text-decoration-none">Users</a></h6>
+        </div>
+
+        <div>
+            <a class="btn btn-primary" asp-action="Create">Add User</a>
+            <a class="btn btn-primary" asp-route-word="#ALL#" asp-action="Index">Get All</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4 text-center">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Branch</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Actions</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var user in Model)
+                    {
+                        <tr id="row_@user.Id" class=@(user.IsDeleted?"bg-light":"")>
+                            <th scope="row">@(index++)</th>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@user.Branch.Name</td>
+                            <td>@user.Role</td>
+                            <td>
+                                @if (user.IsDeleted)
+                                {
+                                    <p>Not Active</p>
+                                }
+                                else
+                                {
+                                    <p>Active</p>
+
+                                }
+                            </td>
+
+                            <td class="text-end">
+                                <a class="btn btn-success" asp-action="Edit" asp-route-id="@user.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a class="btn btn-danger" onclick="Remove('@user.Id')"><i class="fa-solid fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function Remove(id) {
+            //ToDO: remove user
+            var row = document.getElementById("row_" + id)
+
+            bootbox.confirm({
+                message: 'Do you want to delete user? you can restore it again.',
+                buttons: {
+                    confirm: {
+                        label: 'Delete',
+                        className: 'btn-danger'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-primary'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST",
+                            url: `/Users/Delete/${id}`,
+                            dataType: "text",
+                            success: function (response) {
+                                row.remove();
+                            },
+                            error: function () {
+                                alert("Something happend")
+                            }
+                        });
+                    }
+                    console.log('This was logged in the callback: ' + result);
+                }
+            });
+        }
+    </script>
+}

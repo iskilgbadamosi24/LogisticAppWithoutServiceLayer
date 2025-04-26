@@ -1,0 +1,50 @@
+﻿@model City
+@{
+    ViewData["Title"] = "Edit";
+    SelectList countrItem = new SelectList(ViewBag.CountryList, "Id", "Name");
+}
+
+<h1>Edit City</h1>
+
+<div class="container my-2">
+    <div class="row justify-content-between">
+        <div>
+            <h6 class="mt-2"><i class="fa-solid fa-house"></i> ><a asp-action="Index" class="text-decoration-none">Cities</a> > <b><a asp-action="Edit" class="text-decoration-none">Edit City</a></b></h6>
+        </div>
+    </div>
+</div>
+
+<hr />
+<form method="post" asp-action="Edit">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-6">
+            <input class="form-control" asp-for="Id" hidden="" />
+            <label asp-for="Name"></label>
+            <input class="form-control" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="ShippingCost"></label>
+            <input class="form-control" asp-for="ShippingCost" />
+            <span asp-validation-for="ShippingCost" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PickUpCost"></label>
+            <input class="form-control" asp-for="PickUpCost" />
+            <span asp-validation-for="PickUpCost" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CountrId">Country</label>
+
+            <select class="form-control mb-3" asp-for="CountrId" asp-items="countrItem">
+                <option value="0">-- Select Country --</option>
+
+            </select>
+        </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-primary mt-4"   />
+    <a class="btn btn-secondary mt-4" asp-action="Index" >Cancel</a>
+
+</form>

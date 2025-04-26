@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Representative>
+
+@{
+    ViewData["Title"] = "Index";
+    int index = 1;
+}
+
+<h1>Representatives</h1>
+
+<div class="container my-2">
+    <div class="row justify-content-between">
+        <div>
+            <h6 class="mt-2"><i class="fa-solid fa-house"></i> > <a asp-action="Index" class="text-decoration-none">Representatives</a></h6>
+        </div>
+
+        <div>
+            <a asp-action="Create" class="btn btn-primary">Add Representative</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4 text-center">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Phone number
+                        </th>
+                        <th>
+                            Branch
+                        </th>
+                        <th>
+                            Creation Date
+                        </th>
+                        <th>
+                            State
+                        </th>
+                        <th>Edit</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.AppUserId">
+
+                            <td>
+                                @(index++)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUser.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUser.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUser.PhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Branch.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppUser.creationDate)
+
+                            </td>
+                            <td>
+                                <label class="switch">
+                                    <input onclick="changeStatus('@item.AppUserId')" type="checkbox" @(item.IsDeleted ? "" : "checked")>
+                                    <span class="slider round"></span>
+                                </label>
+
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-AppUserId="@item.AppUserId" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        function changeStatus(id) {
+            $.ajax({
+                url: `/Representatives/changeState/${id}`,
+                method: 'GET',
+                success: function () {
+                },
+                error: function () {
+                }
+            });
+        }
+                      
+    </script>
+}
